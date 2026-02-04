@@ -1,0 +1,17 @@
+services:
+  backend:
+    image: shriram2105/pgagi-backend:1.0.0
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - ENV= development
+  frontend:
+    image: shriram2105/pgagi-frontend:1.0.0
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
