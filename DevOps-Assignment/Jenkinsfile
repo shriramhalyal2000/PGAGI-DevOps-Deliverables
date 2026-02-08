@@ -1,0 +1,11 @@
+pipeline{
+    scm checkout
+    agent any
+    stages{
+        stage("Build"){
+            steps{
+                
+            }
+        }
+    }
+}
