@@ -28,8 +28,8 @@ pipeline{
             steps{
                 withCredentials([usernamePassword(
                     credentialsId: "docker-hub-creds",//use same in pipeline config
-                    usernameVariable: "dockerUsr",//docker hub user name variable referenced in pipeline cred
-                    passwordVariable: "dockerPass" //dockerhub password varibale referenced in pipeline cred
+                    usernameVariable: "dockerUsr",//docker hub user name variable referenced in pipeline cred shriram2105
+                    passwordVariable: "dockerPass" //dockerhub password varibale referenced in pipeline cred push pull delete creds
                 )]){
                 sh '''
                 echo "$dockerPass" | docker login -u "$dockerUsr" --password-stdin
@@ -43,7 +43,7 @@ pipeline{
             }
         }
         stage("deploy"){
-            steps{
+            steps{ //can be used to login any other machine to deploy artifacts by ssh  and its creds
                 sh '''
                 docker compose up -d 
                 docker ps 
