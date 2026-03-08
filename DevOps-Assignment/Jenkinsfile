@@ -1,10 +1,53 @@
 pipeline{
     scm checkout
-    agent any
+    agent{
+        docker {
+            image: node:18-alpine
+        }
+    }
     stages{
-        stage("Build"){
+        stage("Build frontend"){
             steps{
-                
+                dir("frontend"){
+                    sh '''
+                    docker build -t frontend:1.0.0 .
+                    '''
+                }
+            }
+        }
+        stage("Backend Build"){
+            steps{
+                dir("backend"){
+                    sh '''
+                    docker build -t backend:1.0.0 .
+                    '''
+                }
+            }
+        }
+        stage("push to repo"){
+            steps{
+                withCredentials([usernamePassword(
+                    credentialsId: "docker-hub-creds",
+                    usernameVariable: "dockerUsr",
+                    passwordVariable: "dockerPass"
+                )]){
+                sh '''
+                echo "$dockerPass" | docker login -u "$dockerUsr" --password-stdin
+                docker tag frontend:1.0.0 "$dockerUsr/frontend:1.0.0"
+                docker tag backend:1.0.0 "$dockerUsr/backend:1.0.0"
+
+                docker push "$dockerUsr/frontend:1.0.0"
+                docker push "$dockerUsr/backend:1.0.0" 
+                '''
+                }
+            }
+        }
+        stage("deploy"){
+            steps{
+                sh '''
+                docker compose up -d 
+                docker ps 
+                '''
             }
         }
     }
