@@ -27,9 +27,9 @@ pipeline{
         stage("push to repo"){
             steps{
                 withCredentials([usernamePassword(
-                    credentialsId: "docker-hub-creds",
-                    usernameVariable: "dockerUsr",
-                    passwordVariable: "dockerPass"
+                    credentialsId: "docker-hub-creds",//use same in pipeline config
+                    usernameVariable: "dockerUsr",//docker hub user name variable referenced in pipeline cred
+                    passwordVariable: "dockerPass" //dockerhub password varibale referenced in pipeline cred
                 )]){
                 sh '''
                 echo "$dockerPass" | docker login -u "$dockerUsr" --password-stdin
